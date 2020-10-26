@@ -5,6 +5,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   runtime: python3.7
   region: ${opt:region, 'us-east-1'}
+  logRetentionInDays: 7
   iamRoleStatements:
     - Effect: "Allow"
       Action:
@@ -24,8 +25,8 @@ package:
 
 functions:
   clear_lambda_storage:
-    handler: handler.clear_lambda_storage
+    handler: clear_lambda_storage.main
     memorySize: 128
-    timeout: 120
+    timeout: 900
     events:
-      - schedule: cron(0 12 ? * SUN *) # Run every sunday at 12:00pm UTC
+      - schedule: rate(1 hour)
